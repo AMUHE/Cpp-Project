@@ -1,0 +1,12 @@
+# Visual Studio 临时文件
+.vs/
+Debug/
+Release/
+x64/
+*.sdf
+*.suo
+*.user
+# 编译生成的可执行文件
+*.exe
+*.obj
+*.pdb
