@@ -12,7 +12,7 @@
 
 
 
-2\. \[学生管理系统 v2.0 (Student-System)]适配 VS2010。
+2\. \[学生管理系统 (Student-System)]适配 VS2010。
 
 \- 核心技术: Windows 消息循环、二进制文件持久化 (fstream)、STL Vector。
 
