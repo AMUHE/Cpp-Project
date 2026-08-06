@@ -1,0 +1,44 @@
+name: smart-access-welcome-ci
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "smart-access-welcome/**"
+      - ".github/workflows/smart-access-welcome.yml"
+  pull_request:
+    paths:
+      - "smart-access-welcome/**"
+      - ".github/workflows/smart-access-welcome.yml"
+
+permissions:
+  contents: read
+
+defaults:
+  run:
+    working-directory: smart-access-welcome
+
+jobs:
+  repository-baseline:
+    runs-on: windows-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Configure
+        run: cmake --preset windows-debug
+
+      - name: Build
+        run: cmake --build --preset windows-debug
+
+      - name: Test
+        run: ctest --preset windows-debug
+
+      - name: Reject tracked runtime or biometric data
+        shell: pwsh
+        run: |
+          $forbidden = git ls-files | Select-String -Pattern '(^|/)(data|runtime|logs|faces)/|\.db($|-)|model\.yml$|labels\.txt$|\.pro\.user'
+          if ($forbidden) {
+            $forbidden | ForEach-Object { Write-Error "Forbidden tracked file: $_" }
+            exit 1
+          }

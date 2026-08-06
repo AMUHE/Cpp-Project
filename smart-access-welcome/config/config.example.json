@@ -1,0 +1,46 @@
+{
+  "schemaVersion": 1,
+  "device": {
+    "id": "terminal-demo-01",
+    "displayName": "一号门智能终端",
+    "doorController": "simulated"
+  },
+  "camera": {
+    "mode": "single_stereo_frame",
+    "primaryIndex": 0,
+    "secondaryIndex": 1,
+    "frameWidth": 1280,
+    "frameHeight": 480,
+    "captureIntervalMs": 30
+  },
+  "recognition": {
+    "engine": "lbph",
+    "confidenceThreshold": 80.0,
+    "requiredConsecutiveMatches": 3,
+    "eventCooldownSeconds": 10,
+    "livenessRequired": false
+  },
+  "server": {
+    "bindAddress": "127.0.0.1",
+    "httpPort": 8080,
+    "webSocketPath": "/ws",
+    "allowRemoteAccess": false
+  },
+  "welcome": {
+    "displayDurationSeconds": 5,
+    "defaultText": "请面向摄像头",
+    "grantedTemplate": "欢迎，{displayName}"
+  },
+  "storage": {
+    "dataDirectory": "runtime/data",
+    "databaseFile": "runtime/data/access.db",
+    "retentionDays": 90,
+    "storeRecognitionSnapshots": false
+  },
+  "logging": {
+    "level": "info",
+    "directory": "runtime/logs",
+    "retentionDays": 14
+  }
+}
+
