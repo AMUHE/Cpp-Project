@@ -1,12 +1,66 @@
-# Visual Studio 临时文件
+# Editors and IDEs
 .vs/
+.vscode/
+.idea/
+*.suo
+*.user
+*.user.*
+*.sdf
+*.VC.db
+*.VC.VC.opendb
+
+# CMake and compiler output
+build/
+build-*/
+out/
 Debug/
 Release/
 x64/
-*.sdf
-*.suo
-*.user
-# 编译生成的可执行文件
-*.exe
+x86/
+CMakeFiles/
+CMakeCache.txt
+cmake_install.cmake
+compile_commands.json
 *.obj
+*.o
 *.pdb
+*.ilk
+*.idb
+*.tlog
+*.lastbuildstate
+*.exe
+*.dll
+*.lib
+*.a
+
+# Qt generated files
+*.pro.user*
+.qtc_clangd/
+ui_*.h
+moc_*.cpp
+qrc_*.cpp
+
+# Runtime data
+students.dat
+*.log
+*.tmp
+
+# Smart access biometric/runtime data
+smart-access-welcome/data/
+smart-access-welcome/runtime/
+smart-access-welcome/logs/
+smart-access-welcome/config/config.json
+smart-access-welcome/.env*
+!smart-access-welcome/.env.example
+smart-access-welcome/**/*.db
+smart-access-welcome/**/model.yml
+smart-access-welcome/**/labels.txt
+smart-access-welcome/**/faces/
+*.pem
+*.key
+*.pfx
+
+# Operating systems
+Thumbs.db
+.DS_Store
+
