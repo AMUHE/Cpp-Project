@@ -1,42 +1,39 @@
 # Smart Access Welcome
 
-Smart Access Welcome 是一个本地优先的智能门禁终端参考实现。它将通用摄像头采集、OpenCV 人脸检测与 LBPH 识别、连续匹配门禁策略、模拟门锁、SQLite 审计、中文语音播报以及 HTTP/WebSocket 欢迎屏整合为一个可测试的 Qt 应用。
+这是一个本地运行的智能门禁终端参考实现。程序使用 Qt 构建界面和网络服务，通过 OpenCV 完成人脸检测与 LBPH 识别，并把门禁事件写入 SQLite。仓库还提供不需要人脸模型或真实门锁的仿真程序。
 
-> 安全边界：当前版本是企业工程基线和演示终端，不是经过安防认证的真实门禁产品。部署到真实门锁前必须完成活体检测、管理员认证、硬件失效安全评估、TLS、密钥管理和隐私合规验收。
+> 本项目没有经过安防认证，不应直接用于真实门禁。接入真实门锁前，至少需要补充活体检测、管理员认证、TLS、密钥管理、硬件失效安全评估和隐私合规验收。
 
-## 已实现能力
+## 主要功能
 
-- 默认支持电脑内置摄像头和 USB 等外接单摄像头，同时兼容单设备左右拼接双目画面与两个独立摄像头。
-- Haar 级联人脸检测、样本录入、LBPH 训练和本地识别。
-- 连续匹配确认、未知人员拒绝和按身份冷却去重。
-- 模拟门锁自动复位，硬件适配器接口边界清晰。
-- SQLite WAL 审计事件库和按保留期清理。
-- Qt TextToSpeech 中文播报；引擎运行在工作线程，故障时安全降级。
-- 同端口 HTTP 健康检查、终端状态接口和 WebSocket 实时事件。
-- 内置响应式欢迎页：访问 `http://127.0.0.1:8080/`。
-- 配置校验、请求大小限制、连接上限和基础安全响应头。
-- CMake、qmake、Qt Test、GitHub Actions 和 Windows 部署流程。
+- 支持单摄像头、单设备左右拼接画面和双摄像头采集；
+- Haar 人脸检测、样本录入、LBPH 训练及本地识别；
+- 连续匹配确认、未知人员拒绝和按身份冷却；
+- 自动复位的模拟门锁；
+- SQLite WAL 审计和按保留期清理；
+- Qt TextToSpeech 中文播报；
+- HTTP 健康检查、终端状态接口、WebSocket 事件和内置欢迎页；
+- CMake 与 qmake 构建、Qt Test 测试和 GitHub Actions 流程。
 
-## 技术基线
+## 依赖
 
 - C++17、CMake 3.21+
 - Qt 5.14.2+ 或 Qt 6：Core、Widgets、Network、Sql、Test、WebSockets、TextToSpeech
-- OpenCV 4.x + contrib/face；旧有 3.4.5 只作为迁移兼容工具链
-- Windows 10/11 x64 为目标部署平台；CI 在 Ubuntu 上验证可移植构建
+- OpenCV 4.x，包含 contrib/face 模块
+
+目标部署平台为 Windows 10/11 x64，CI 也会在 Ubuntu 上检查构建。Qt 5.14.2、32 位 MinGW 和 OpenCV 3.4.5 仅用于旧环境迁移。
 
 ## 快速开始
 
-复制配置并根据设备调整：
+先复制示例配置：
 
 ```powershell
 Copy-Item config/config.example.json config/config.json
 ```
 
-默认配置使用索引 `0` 的单摄像头，通常对应电脑内置摄像头。连接 USB 摄像头后，如果画面仍来自内置设备，请在终端页面依次尝试索引 `1`、`2`；只有双目设备才需要切换接入方式。
+默认使用索引 `0` 的单摄像头。连接 USB 摄像头后如果仍显示内置摄像头，可在终端中尝试索引 `1`、`2`。只有设备输出左右拼接画面或使用两台摄像头时，才需要更改摄像头模式。
 
-如果只想快速体验页面和门禁流程，可运行独立的 `CameraSimulationDemo`。它默认使用合成画面，并提供模拟识别通过、拒绝、开锁倒计时、自动复位以及实时浏览器欢迎页，完整步骤见[摄像头与门禁仿真 Demo](docs/camera-simulation-demo.md)。
-
-CMake 构建：
+使用 CMake 构建和测试：
 
 ```powershell
 cmake --preset windows-debug
@@ -44,7 +41,7 @@ cmake --build --preset windows-debug
 ctest --preset windows-debug
 ```
 
-当前 Qt 5.14.2/MinGW 迁移环境也可以使用 qmake：
+旧版 Qt/MinGW 环境可以使用 qmake：
 
 ```powershell
 $env:OPENCV_ROOT = 'E:/path/to/opencv/install'
@@ -52,37 +49,39 @@ qmake SmartAccessWelcome.pro
 mingw32-make -j4
 ```
 
-运行前设置检测模型，或将模型放到可执行文件同级/`cascades` 子目录：
+运行前需指定 Haar 级联模型，也可以将模型放在可执行文件同级的 `cascades` 目录：
 
 ```powershell
 $env:SAW_CASCADE_PATH = 'C:/models/haarcascade_frontalface_default.xml'
 .\SmartAccessWelcome.exe
 ```
 
-可选环境变量：
+如果只需查看门禁流程，可运行 `CameraSimulationDemo`。它使用合成画面模拟识别通过、拒绝、开锁倒计时、自动复位和浏览器欢迎页，操作方法见[仿真程序说明](docs/camera-simulation-demo.md)。
+
+## 环境变量
 
 | 变量 | 用途 |
 |---|---|
 | `SAW_CONFIG_PATH` | 指定 JSON 配置文件 |
-| `SAW_DATA_DIR` | 覆盖本地数据目录，便于服务账户和测试隔离 |
-| `SAW_CASCADE_PATH` | 指定人脸检测级联模型 |
-| `OPENCV_ROOT` | qmake 构建时指定 OpenCV 安装根目录 |
+| `SAW_DATA_DIR` | 指定本地数据目录 |
+| `SAW_CASCADE_PATH` | 指定 Haar 级联模型 |
+| `OPENCV_ROOT` | 指定 qmake 使用的 OpenCV 安装目录 |
 
 ## 运行数据
 
-默认写入 Qt `AppLocalDataLocation`，包括：
+默认数据目录是 Qt 的 `AppLocalDataLocation`：
 
-- `faces/<姓名>/`：录入样本；
-- `model.yml`、`labels.csv`：LBPH 模型与标签；
-- `access.db`：门禁审计事件。
+- `faces/<姓名>/`：录入的人脸样本；
+- `model.yml`、`labels.csv`：LBPH 模型和标签；
+- `access.db`：门禁事件数据库。
 
-这些内容均被 Git 忽略。禁止提交真实人脸、数据库、凭据或门禁日志。
+这些文件均被 Git 忽略。不要提交真实人脸、数据库、凭据或门禁日志。
 
-## 文档导航
+## 文档
 
 - [系统架构](docs/architecture.md)
-- [Qt UI 设计与 Designer 交付](docs/ui-design.md)
-- [摄像头与门禁仿真 Demo](docs/camera-simulation-demo.md)
+- [Qt UI 设计](docs/ui-design.md)
+- [摄像头与门禁仿真](docs/camera-simulation-demo.md)
 - [开发指南](docs/development.md)
 - [配置参考](docs/configuration.md)
 - [API 协议](docs/api.md)
@@ -97,4 +96,4 @@ $env:SAW_CASCADE_PATH = 'C:/models/haarcascade_frontalface_default.xml'
 
 ## 许可证
 
-项目代码使用 [MIT License](LICENSE)。Qt、OpenCV、语音引擎、模型文件及摄像头驱动分别遵循其自身许可证。
+项目代码使用 [MIT License](LICENSE)。Qt、OpenCV、语音引擎、模型文件和摄像头驱动分别适用各自的许可证。

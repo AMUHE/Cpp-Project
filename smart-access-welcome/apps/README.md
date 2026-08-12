@@ -1,12 +1,12 @@
 # 应用程序
 
-本目录包含两个可独立运行的 Qt Widgets 应用：
+这里包含两个可以独立运行的 Qt Widgets 应用。
 
 | 目录 | 构建目标 | 用途 |
 |---|---|---|
-| `terminal/` | `saw_terminal` / `SmartAccessWelcome.exe` | 正式门禁终端，包含摄像头、人脸录入与识别、策略、审计、语音、模拟门锁及欢迎页服务 |
-| `camera-demo/` | `saw_camera_demo` / `CameraSimulationDemo.exe` | 无人脸模型也能运行的仿真程序，支持合成画面或真实单摄像头，并同步驱动浏览器欢迎页 |
+| `terminal/` | `saw_terminal` / `SmartAccessWelcome.exe` | 完整终端，包括采集、录入、识别、门禁策略、审计、语音、模拟门锁和欢迎页服务 |
+| `camera-demo/` | `saw_camera_demo` / `CameraSimulationDemo.exe` | 不需要人脸模型的仿真程序，可使用合成画面或单摄像头 |
 
-正式终端页面遵循最小文案原则，只显示运行所需的状态、设备字段和操作按钮。操作教程、摄像头索引排查和安全边界放在 `docs/` 中。仿真程序面向开发演示，可以显示仿真标识、事件记录和欢迎页入口。
+两个应用复用 `modules/` 中的实现。摄像头、门锁和 HTTP/WebSocket 代码应留在对应模块中，不在应用目录重复实现。
 
-两个应用共用 `modules/` 中的能力，不应复制摄像头、门锁或 HTTP/WebSocket 实现。
+正式终端的界面只保留运行时需要的状态、设备信息和操作。使用教程、设备排查和安全说明放在 `docs/` 中；仿真程序可以显示事件记录和欢迎页地址，便于开发演示。

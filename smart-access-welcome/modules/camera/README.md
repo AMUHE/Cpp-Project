@@ -1,15 +1,13 @@
 # Camera 模块
 
-公开接口：`include/saw/camera/stereo_camera.h`。
-
-支持三种模式：
+公开接口：`include/saw/camera/stereo_camera.h`
 
 | `CameraMode` | 配置值 | 行为 |
 |---|---|---|
-| `SingleDevice` | `single_device` | 电脑内置、USB 外接摄像头或采集卡；完整帧用于预览和识别 |
-| `SideBySideDevice` | `single_stereo_frame` | 单设备输出左右拼接画面；完整帧预览，左半帧识别 |
-| `SeparateDevices` | `separate_devices` | 同时打开两个设备并拼接预览，主设备帧用于识别 |
+| `SingleDevice` | `single_device` | 打开一个内置、USB 或采集卡设备，完整帧用于预览和识别 |
+| `SideBySideDevice` | `single_stereo_frame` | 接收单设备的左右拼接画面，完整帧用于预览，左半帧用于识别 |
+| `SeparateDevices` | `separate_devices` | 打开两台设备并拼接预览，主设备帧用于识别 |
 
-Windows 优先使用 DirectShow，失败后回退到 OpenCV 默认后端。设备索引由操作系统分配；模块不枚举或持久化设备名称。
+Windows 上优先使用 DirectShow，失败后回退到 OpenCV 默认后端。设备索引由操作系统分配，模块不保存设备名称。
 
-普通单摄像头路径不得要求第二设备，也不得裁切识别帧。硬件断连恢复尚属路线图任务，当前读取失败由应用层显示异常并保持门锁关闭。
+普通单摄像头模式不会打开第二台设备，也不会裁剪识别帧。目前尚未实现硬件断线后的自动恢复；读取失败由应用层提示，门锁保持关闭。
