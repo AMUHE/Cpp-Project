@@ -1,2 +1,3 @@
-# Application targets are added after camera and recognition modules are migrated.
+add_subdirectory(terminal)
+add_subdirectory(camera-demo)
 

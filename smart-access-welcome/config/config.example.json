@@ -2,45 +2,40 @@
   "schemaVersion": 1,
   "device": {
     "id": "terminal-demo-01",
-    "displayName": "一号门智能终端",
-    "doorController": "simulated"
+    "displayName": "一号门智能终端"
   },
   "camera": {
-    "mode": "single_stereo_frame",
+    "mode": "single_device",
     "primaryIndex": 0,
     "secondaryIndex": 1,
     "frameWidth": 1280,
-    "frameHeight": 480,
+    "frameHeight": 720,
     "captureIntervalMs": 30
   },
   "recognition": {
-    "engine": "lbph",
     "confidenceThreshold": 80.0,
     "requiredConsecutiveMatches": 3,
-    "eventCooldownSeconds": 10,
-    "livenessRequired": false
+    "eventCooldownSeconds": 10
   },
   "server": {
     "bindAddress": "127.0.0.1",
-    "httpPort": 8080,
-    "webSocketPath": "/ws",
-    "allowRemoteAccess": false
+    "httpPort": 8080
   },
   "welcome": {
     "displayDurationSeconds": 5,
     "defaultText": "请面向摄像头",
     "grantedTemplate": "欢迎，{displayName}"
   },
-  "storage": {
-    "dataDirectory": "runtime/data",
-    "databaseFile": "runtime/data/access.db",
-    "retentionDays": 90,
-    "storeRecognitionSnapshots": false
+  "speech": {
+    "enabled": true,
+    "locale": "zh_CN",
+    "rate": 0.0,
+    "volume": 1.0,
+    "grantedTemplate": "欢迎，{displayName}",
+    "deniedText": "未识别，请联系管理员"
   },
-  "logging": {
-    "level": "info",
-    "directory": "runtime/logs",
-    "retentionDays": 14
+  "storage": {
+    "databaseFile": "access.db",
+    "retentionDays": 90
   }
 }
-

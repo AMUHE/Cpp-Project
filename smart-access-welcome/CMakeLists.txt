@@ -6,19 +6,29 @@ project(SmartAccessWelcome
     LANGUAGES CXX
 )
 
+set(CMAKE_AUTOMOC ON)
+set(CMAKE_AUTOUIC ON)
+set(CMAKE_AUTORCC ON)
+
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
 
-option(SAW_BUILD_APPS "Build desktop and server applications" OFF)
+option(SAW_BUILD_APPS "Build desktop and server applications" ON)
 option(SAW_BUILD_TESTS "Build automated tests" ON)
 option(SAW_ENABLE_LEGACY_OPENCV "Allow the legacy OpenCV 3.4 migration environment" OFF)
 
 list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake")
 
+if(MSVC)
+    add_compile_options(/W4 /permissive- /utf-8)
+else()
+    add_compile_options(-Wall -Wextra -Wpedantic)
+endif()
+
 if(SAW_BUILD_APPS)
-    find_package(QT NAMES Qt6 Qt5 REQUIRED COMPONENTS Core Widgets Network Sql)
-    find_package(Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS Core Widgets Network Sql)
+    find_package(QT NAMES Qt6 Qt5 REQUIRED COMPONENTS Core Widgets Network Sql Test WebSockets TextToSpeech)
+    find_package(Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS Core Widgets Network Sql Test WebSockets TextToSpeech)
     find_package(OpenCV REQUIRED COMPONENTS core imgproc imgcodecs videoio objdetect face)
 
     if(OpenCV_VERSION VERSION_LESS 4.0 AND NOT SAW_ENABLE_LEGACY_OPENCV)

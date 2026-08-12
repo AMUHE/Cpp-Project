@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>MainWindow</class>
+ <widget class="QMainWindow" name="MainWindow">
+  <property name="geometry">
+   <rect><x>0</x><y>0</y><width>1440</width><height>900</height></rect>
+  </property>
+  <property name="minimumSize"><size><width>1180</width><height>760</height></size></property>
+  <property name="windowTitle"><string>Smart Access · 智能门禁终端</string></property>
+  <property name="styleSheet">
+   <string notr="true">QMainWindow { background: #07111F; }
+QWidget#centralWidget { background: #07111F; color: #E8F1F8; font-family: "Microsoft YaHei UI"; font-size: 14px; }
+QFrame#topBar { background: #0B1828; border: 1px solid #17304A; border-radius: 16px; }
+QLabel#logoMark { background: #16A3D6; color: #FFFFFF; border-radius: 12px; font-size: 20px; font-weight: 700; }
+QLabel#productName { color: #F4FAFF; font-size: 18px; font-weight: 700; }
+QLabel#headerClockLabel, QLabel[role="muted"] { color: #7690A6; }
+QLabel[role="sectionTitle"] { color: #F4FAFF; font-size: 18px; font-weight: 700; }
+QLabel[role="body"] { color: #AEC0CF; line-height: 1.4; }
+QLabel[role="status"] { padding: 7px 12px; border-radius: 11px; font-size: 12px; font-weight: 700; }
+QLabel[status="ready"] { color: #64E6AF; background: #123A35; border: 1px solid #1C5E4E; }
+QLabel[status="active"] { color: #6DD7FF; background: #10344A; border: 1px solid #1B5876; }
+QLabel[status="warning"] { color: #FFD27A; background: #3B311B; border: 1px solid #665025; }
+QLabel[status="offline"] { color: #91A6B8; background: #142332; border: 1px solid #263E53; }
+QFrame#cameraCard, QFrame#controlPanel { background: #0B1828; border: 1px solid #17304A; border-radius: 18px; }
+QFrame#previewShell { background: #040A12; border: 1px solid #1A344B; border-radius: 14px; }
+QLabel#videoLabel { color: #6E879B; background: transparent; font-size: 16px; border: none; }
+QFrame[role="metric"] { background: #0E2032; border: 1px solid #183A54; border-radius: 12px; }
+QLabel[role="metricLabel"] { color: #6F8AA0; font-size: 11px; }
+QLabel[role="metricValue"] { color: #E8F6FF; font-size: 14px; font-weight: 700; }
+QLabel[role="fieldLabel"] { color: #91A9BB; font-size: 12px; font-weight: 600; }
+QComboBox, QSpinBox { min-height: 40px; color: #E8F1F8; background: #0E2032; border: 1px solid #28475E; border-radius: 10px; padding: 0 12px; selection-background-color: #167DA5; }
+QComboBox:hover, QSpinBox:hover { border-color: #3A789A; }
+QComboBox:focus, QSpinBox:focus { border: 1px solid #29B5E8; }
+QComboBox::drop-down { border: none; width: 30px; }
+QComboBox QAbstractItemView { color: #E8F1F8; background: #102235; border: 1px solid #31546C; selection-background-color: #176D8E; outline: none; }
+QPushButton { min-height: 42px; border-radius: 11px; padding: 0 18px; font-weight: 700; }
+QPushButton#openButton, QPushButton#recognizeButton { color: #03121A; background: #5ED8FF; border: 1px solid #72DEFF; }
+QPushButton#openButton:hover, QPushButton#recognizeButton:hover { background: #83E2FF; }
+QPushButton#enrollButton { color: #DAF5FF; background: #123B52; border: 1px solid #246582; }
+QPushButton#enrollButton:hover { background: #194C67; }
+QPushButton#closeButton { color: #FFB9B9; background: #321D26; border: 1px solid #623242; }
+QPushButton#closeButton:hover { background: #472431; }
+QPushButton:disabled { color: #526879; background: #102030; border-color: #1B3347; }
+QFrame[role="divider"] { color: #17304A; background: #17304A; max-height: 1px; }
+QStatusBar { color: #7891A5; background: #081522; border-top: 1px solid #152C40; font-family: "Microsoft YaHei UI"; }
+QStatusBar::item { border: none; }</string>
+  </property>
+  <widget class="QWidget" name="centralWidget">
+   <layout class="QVBoxLayout" name="rootLayout" stretch="0,1">
+    <property name="leftMargin"><number>24</number></property><property name="topMargin"><number>20</number></property>
+    <property name="rightMargin"><number>24</number></property><property name="bottomMargin"><number>18</number></property>
+    <property name="spacing"><number>18</number></property>
+    <item>
+     <widget class="QFrame" name="topBar">
+      <property name="minimumSize"><size><width>0</width><height>76</height></size></property>
+      <layout class="QHBoxLayout" name="topBarLayout">
+       <property name="leftMargin"><number>16</number></property><property name="topMargin"><number>12</number></property>
+       <property name="rightMargin"><number>18</number></property><property name="bottomMargin"><number>12</number></property>
+       <property name="spacing"><number>14</number></property>
+       <item><widget class="QLabel" name="logoMark"><property name="minimumSize"><size><width>48</width><height>48</height></size></property><property name="maximumSize"><size><width>48</width><height>48</height></size></property><property name="text"><string>SA</string></property><property name="alignment"><set>Qt::AlignCenter</set></property></widget></item>
+       <item><widget class="QLabel" name="productName"><property name="text"><string>Smart Access Welcome</string></property></widget></item>
+       <item><spacer name="topSpacer"><property name="orientation"><enum>Qt::Horizontal</enum></property><property name="sizeHint" stdset="0"><size><width>40</width><height>20</height></size></property></spacer></item>
+       <item><widget class="QLabel" name="headerClockLabel"><property name="text"><string>--:--:--</string></property><property name="alignment"><set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set></property></widget></item>
+       <item><widget class="QLabel" name="serviceStatusLabel"><property name="role" stdset="0"><string>status</string></property><property name="status" stdset="0"><string>active</string></property><property name="text"><string>● 本地服务 8080</string></property><property name="alignment"><set>Qt::AlignCenter</set></property></widget></item>
+      </layout>
+     </widget>
+    </item>
+    <item>
+     <layout class="QHBoxLayout" name="contentLayout" stretch="7,3">
+      <property name="spacing"><number>18</number></property>
+      <item>
+       <widget class="QFrame" name="cameraCard">
+        <layout class="QVBoxLayout" name="cameraCardLayout" stretch="0,1,0">
+         <property name="leftMargin"><number>20</number></property><property name="topMargin"><number>18</number></property>
+         <property name="rightMargin"><number>20</number></property><property name="bottomMargin"><number>20</number></property><property name="spacing"><number>16</number></property>
+         <item>
+          <layout class="QHBoxLayout" name="previewHeaderLayout">
+           <item><widget class="QLabel" name="previewTitle"><property name="role" stdset="0"><string>sectionTitle</string></property><property name="text"><string>实时画面</string></property></widget></item>
+           <item><spacer name="previewHeaderSpacer"><property name="orientation"><enum>Qt::Horizontal</enum></property><property name="sizeHint" stdset="0"><size><width>40</width><height>20</height></size></property></spacer></item>
+           <item><widget class="QLabel" name="mainStateBadge"><property name="role" stdset="0"><string>status</string></property><property name="status" stdset="0"><string>offline</string></property><property name="text"><string>● 等待设备</string></property><property name="alignment"><set>Qt::AlignCenter</set></property></widget></item>
+          </layout>
+         </item>
+         <item>
+          <widget class="QFrame" name="previewShell">
+           <layout class="QVBoxLayout" name="previewLayout"><property name="leftMargin"><number>8</number></property><property name="topMargin"><number>8</number></property><property name="rightMargin"><number>8</number></property><property name="bottomMargin"><number>8</number></property>
+            <item><widget class="QLabel" name="videoLabel"><property name="minimumSize"><size><width>720</width><height>420</height></size></property><property name="text"><string>摄像头未开启</string></property><property name="alignment"><set>Qt::AlignCenter</set></property><property name="wordWrap"><bool>true</bool></property></widget></item>
+           </layout>
+          </widget>
+         </item>
+         <item>
+          <layout class="QHBoxLayout" name="metricsLayout"><property name="spacing"><number>10</number></property>
+           <item><widget class="QFrame" name="cameraMetric"><property name="role" stdset="0"><string>metric</string></property><layout class="QVBoxLayout" name="cameraMetricLayout"><property name="leftMargin"><number>14</number></property><property name="topMargin"><number>10</number></property><property name="rightMargin"><number>14</number></property><property name="bottomMargin"><number>10</number></property><property name="spacing"><number>3</number></property><item><widget class="QLabel" name="cameraMetricLabel"><property name="role" stdset="0"><string>metricLabel</string></property><property name="text"><string>摄像头</string></property></widget></item><item><widget class="QLabel" name="cameraStatusValue"><property name="role" stdset="0"><string>metricValue</string></property><property name="text"><string>离线</string></property></widget></item></layout></widget></item>
+           <item><widget class="QFrame" name="recognizerMetric"><property name="role" stdset="0"><string>metric</string></property><layout class="QVBoxLayout" name="recognizerMetricLayout"><property name="leftMargin"><number>14</number></property><property name="topMargin"><number>10</number></property><property name="rightMargin"><number>14</number></property><property name="bottomMargin"><number>10</number></property><property name="spacing"><number>3</number></property><item><widget class="QLabel" name="recognizerMetricLabel"><property name="role" stdset="0"><string>metricLabel</string></property><property name="text"><string>识别模型</string></property></widget></item><item><widget class="QLabel" name="recognizerStatusValue"><property name="role" stdset="0"><string>metricValue</string></property><property name="text"><string>未就绪</string></property></widget></item></layout></widget></item>
+           <item><widget class="QFrame" name="databaseMetric"><property name="role" stdset="0"><string>metric</string></property><layout class="QVBoxLayout" name="databaseMetricLayout"><property name="leftMargin"><number>14</number></property><property name="topMargin"><number>10</number></property><property name="rightMargin"><number>14</number></property><property name="bottomMargin"><number>10</number></property><property name="spacing"><number>3</number></property><item><widget class="QLabel" name="databaseMetricLabel"><property name="role" stdset="0"><string>metricLabel</string></property><property name="text"><string>审计存储</string></property></widget></item><item><widget class="QLabel" name="databaseStatusValue"><property name="role" stdset="0"><string>metricValue</string></property><property name="text"><string>检查中</string></property></widget></item></layout></widget></item>
+           <item><widget class="QFrame" name="speechMetric"><property name="role" stdset="0"><string>metric</string></property><layout class="QVBoxLayout" name="speechMetricLayout"><property name="leftMargin"><number>14</number></property><property name="topMargin"><number>10</number></property><property name="rightMargin"><number>14</number></property><property name="bottomMargin"><number>10</number></property><property name="spacing"><number>3</number></property><item><widget class="QLabel" name="speechMetricLabel"><property name="role" stdset="0"><string>metricLabel</string></property><property name="text"><string>语音播报</string></property></widget></item><item><widget class="QLabel" name="speechStatusValue"><property name="role" stdset="0"><string>metricValue</string></property><property name="text"><string>初始化</string></property></widget></item></layout></widget></item>
+          </layout>
+         </item>
+        </layout>
+       </widget>
+      </item>
+      <item>
+       <layout class="QVBoxLayout" name="sidebarLayout" stretch="0,1"><property name="spacing"><number>14</number></property>
+        <item>
+         <widget class="QFrame" name="controlPanel">
+          <layout class="QVBoxLayout" name="controlPanelLayout"><property name="leftMargin"><number>20</number></property><property name="topMargin"><number>18</number></property><property name="rightMargin"><number>20</number></property><property name="bottomMargin"><number>20</number></property><property name="spacing"><number>12</number></property>
+           <item><widget class="QLabel" name="controlTitle"><property name="role" stdset="0"><string>sectionTitle</string></property><property name="text"><string>设备控制</string></property></widget></item>
+           <item><widget class="QLabel" name="modeLabel"><property name="role" stdset="0"><string>fieldLabel</string></property><property name="text"><string>接入方式</string></property></widget></item>
+           <item><widget class="QComboBox" name="modeComboBox"><property name="currentIndex"><number>0</number></property><item><property name="text"><string>单摄像头（电脑内置或外接）</string></property></item><item><property name="text"><string>双目摄像头（左右拼接）</string></property></item><item><property name="text"><string>两个独立摄像头</string></property></item></widget></item>
+           <item><layout class="QHBoxLayout" name="deviceFieldsLayout"><property name="spacing"><number>10</number></property>
+             <item><layout class="QVBoxLayout" name="primaryFieldLayout"><property name="spacing"><number>6</number></property><item><widget class="QLabel" name="primaryLabel"><property name="role" stdset="0"><string>fieldLabel</string></property><property name="text"><string>摄像头索引</string></property></widget></item><item><widget class="QSpinBox" name="primarySpinBox"><property name="maximum"><number>32</number></property></widget></item></layout></item>
+             <item><layout class="QVBoxLayout" name="secondaryFieldLayout"><property name="spacing"><number>6</number></property><item><widget class="QLabel" name="secondaryLabel"><property name="role" stdset="0"><string>fieldLabel</string></property><property name="text"><string>第二摄像头索引</string></property></widget></item><item><widget class="QSpinBox" name="secondarySpinBox"><property name="maximum"><number>32</number></property><property name="value"><number>1</number></property></widget></item></layout></item>
+           </layout></item>
+           <item><widget class="QFrame" name="controlDivider"><property name="role" stdset="0"><string>divider</string></property><property name="frameShape"><enum>QFrame::HLine</enum></property></widget></item>
+           <item><layout class="QHBoxLayout" name="cameraActionsLayout"><property name="spacing"><number>10</number></property><item><widget class="QPushButton" name="openButton"><property name="text"><string>启动摄像头</string></property></widget></item><item><widget class="QPushButton" name="closeButton"><property name="text"><string>停止</string></property></widget></item></layout></item>
+           <item><widget class="QPushButton" name="enrollButton"><property name="text"><string>＋ 录入新人员</string></property></widget></item>
+           <item><widget class="QPushButton" name="recognizeButton"><property name="minimumSize"><size><width>0</width><height>48</height></size></property><property name="text"><string>开始身份识别</string></property></widget></item>
+          </layout>
+         </widget>
+        </item>
+        <item><spacer name="sidebarSpacer"><property name="orientation"><enum>Qt::Vertical</enum></property><property name="sizeHint" stdset="0"><size><width>20</width><height>40</height></size></property></spacer></item>
+       </layout>
+      </item>
+     </layout>
+    </item>
+   </layout>
+  </widget>
+  <widget class="QStatusBar" name="statusBar"><property name="sizeGripEnabled"><bool>false</bool></property></widget>
+ </widget>
+ <tabstops><tabstop>modeComboBox</tabstop><tabstop>primarySpinBox</tabstop><tabstop>secondarySpinBox</tabstop><tabstop>openButton</tabstop><tabstop>closeButton</tabstop><tabstop>enrollButton</tabstop><tabstop>recognizeButton</tabstop></tabstops>
+ <resources/>
+ <connections/>
+</ui>

@@ -1,2 +1,10 @@
-# Module targets are added as the legacy prototype is migrated.
+add_subdirectory(config)
+add_subdirectory(camera)
+add_subdirectory(vision)
+add_subdirectory(access-server)
+add_subdirectory(access-control)
+add_subdirectory(persistence)
+add_subdirectory(device)
+add_subdirectory(speech)
+add_subdirectory(logging)
 

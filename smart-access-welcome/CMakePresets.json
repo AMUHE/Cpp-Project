@@ -23,7 +23,7 @@
       "generator": "Ninja",
       "cacheVariables": {
         "CMAKE_BUILD_TYPE": "Debug",
-        "SAW_BUILD_APPS": "OFF"
+        "SAW_BUILD_APPS": "ON"
       },
       "condition": {
         "type": "equals",
@@ -64,4 +64,3 @@
     }
   ]
 }
-

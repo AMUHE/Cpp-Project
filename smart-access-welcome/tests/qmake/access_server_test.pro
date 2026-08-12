@@ -1,0 +1,9 @@
+QT += core network websockets testlib
+QT -= gui
+CONFIG += console testcase c++17
+TEMPLATE = app
+TARGET = access_server_test
+SOURCES += ../access_server_test.cpp ../../modules/access-server/access_server.cpp
+HEADERS += ../../modules/access-server/include/saw/server/access_server.h
+INCLUDEPATH += ../../modules/access-server/include
+DESTDIR = bin

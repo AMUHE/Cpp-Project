@@ -12,7 +12,7 @@
 | OpenCV | 4.x x64 + contrib | 必须包含 `face` 模块 |
 | 编译器 | 与 Qt 套件一致 | MSVC 与 MinGW 二进制不得混用 |
 
-当前计算机盘点只发现 Git；`cmake`、`qmake`、`ninja` 和 `mingw32-make` 未在当前 PowerShell 的 `PATH` 中。旧原型绑定 Qt 5.14.2、MinGW 32 位和 OpenCV 3.4.5，后续应迁移到统一的 x64 工具链。
+旧原型绑定 Qt 5.14.2、MinGW 32 位和 OpenCV 3.4.5，仓库保留 qmake 迁移入口；正式发布仍应迁移到统一的 x64 工具链。
 
 ## 依赖原则
 
@@ -31,7 +31,7 @@ $env:OpenCV_DIR = "C:\Libraries\opencv\build\x64\vc17\lib"
 
 ## 配置与构建
 
-仓库基线检查暂不要求 Qt/OpenCV：
+完整构建要求 Qt 与 OpenCV：
 
 ```powershell
 cmake --preset windows-debug
@@ -39,7 +39,7 @@ cmake --build --preset windows-debug
 ctest --preset windows-debug
 ```
 
-迁入应用后，发布构建启用依赖发现：
+发布构建：
 
 ```powershell
 cmake --preset windows-release
@@ -48,6 +48,18 @@ ctest --preset windows-release
 ```
 
 旧 OpenCV 3.4 仅限迁移验证，可设置 `SAW_ENABLE_LEGACY_OPENCV=ON`，不得作为正式发布基线。
+
+遗留 qmake 一键构建与部署：
+
+```powershell
+.\scripts\build-windows-qmake.ps1 `
+  -QtRoot E:\Qt\5.14.2\mingw73_32 `
+  -MingwRoot E:\Qt\Tools\mingw730_32 `
+  -OpenCvRoot E:\opencv\install -Configuration release -Deploy
+.\scripts\run-tests.ps1 `
+  -QtRoot E:\Qt\5.14.2\mingw73_32 `
+  -MingwRoot E:\Qt\Tools\mingw730_32
+```
 
 ## 运行目录
 
@@ -72,6 +84,7 @@ C:\ProgramData\SmartAccessWelcome\logs    滚动日志
 
 1. 使用 Release 配置构建并运行全部测试。
 2. 使用 Qt 部署工具收集 Qt 插件，按许可证清单收集必要 OpenCV DLL。
+   必须包含 `sqldrivers/qsqlite` 和 `texttospeech/qtexttospeech_sapi`。
 3. 包含网页资源、检测器资源和 `config.example.json`。
 4. 排除本地配置、数据库、模型、样本、日志和密钥。
 5. 生成 ZIP/安装包和 SHA-256 校验值。
@@ -84,4 +97,3 @@ C:\ProgramData\SmartAccessWelcome\logs    滚动日志
 - 不得直接暴露到公网。
 - 程序按版本部署，数据目录独立；数据库迁移前备份并记录最低兼容版本。
 - 回滚时先停用门锁控制，进入拒绝优先模式，验证数据兼容后再切换。
-

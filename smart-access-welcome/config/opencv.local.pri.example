@@ -1,0 +1,3 @@
+# Copy this file to opencv.local.pri and use forward slashes.
+# The local file is ignored by Git and is loaded automatically by qmake.
+OPENCV_ROOT = C:/Libraries/opencv/install
