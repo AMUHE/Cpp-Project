@@ -41,10 +41,4 @@
 - Smart Access Welcome 的人脸样本及运行数据只保存在本机，并已纳入忽略规则。
 - 新功能通过分支和 Pull Request 合并到 `main`；目录规范见[仓库维护指南](docs/repository-layout.md)。
 
-## 当前注意事项
-
-- Smart Access Welcome 的工作流定义目前保存在子项目目录中，尚未接入仓库根目录的 GitHub Actions 自动发现路径；提交前请在本地执行对应测试。
-- Student System 仍有部分历史字符串编码问题，且二进制数据文件不保证跨编译器或跨架构兼容。
-- Gomoku 依赖 Windows/EasyX，目前不支持 Linux 或 macOS。
-
 保持好奇，持续编码。
