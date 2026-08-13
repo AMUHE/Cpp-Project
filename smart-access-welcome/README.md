@@ -1,142 +1,142 @@
 # Smart Access Welcome
 
-Smart Access Welcome 是一个基于 C++17、Qt Widgets 和 OpenCV 的本地智能门禁原型。主程序支持人脸录入与识别、账号密码开门、模拟门锁、SQLite 审计、中文语音播报，以及自动打开的浏览器欢迎页。仓库还包含一个无需人脸模型的摄像头与门禁仿真程序。
+我用 C++17、Qt Widgets 和 OpenCV 开发了 Smart Access Welcome，把它做成了一个本地优先的智能门禁原型。我在主程序里实现了人脸录入与识别、账号密码开门、模拟门锁、SQLite 审计、中文语音播报和浏览器欢迎页；我还保留了一个不依赖人脸模型的仿真程序，方便我单独验证摄像头、欢迎页和门禁流程。
 
-> 本项目用于研发、教学和流程验证，当前没有活体检测，也没有接入真实门锁。不要未经安全评估直接用于生产门禁。
+> 我把这个项目定位为研发、教学和流程验证原型。我目前没有实现活体检测，也没有接入真实门锁，因此我不会把它未经安全评估直接用于生产门禁。
 
-## 当前功能
+## 我实现的功能
 
-- 单摄像头、左右拼接双目画面和双设备采集；
-- Haar Cascade 人脸检测和 LBPH 本地识别；
-- 录入过程显示 `0/20` 采集进度；
-- 人脸样本、模型和 UTF-8 姓名标签持久保存，重启后自动加载；
-- 模型缺失时从已有样本自动重建，无需重复录入；
-- 模型与标签通过 SHA-256 清单绑定，不一致时拒绝混用；
-- 画面显示归一化识别准确度，默认最低值为 20%；
-- 同一身份连续匹配 3 次后才允许开门；
-- 多张人脸同时出现时拒绝放行；
-- 账号密码登录开门为常态入口，与人脸识别并列使用；
-- 开门前必须先写入审计记录，数据库异常时保持关门；
-- 模拟门锁按配置时间自动复位；
-- HTTP/WebSocket 欢迎页随主程序启动，并自动在浏览器打开；
-- 中文语音异步播报；
-- 审计记录按保留期限自动清理，默认保留 90 天；
-- 支持 CMake、qmake、Debug/Release 和自动化测试。
+- 我支持单摄像头、左右拼接双目画面和两个独立摄像头；
+- 我使用 Haar Cascade 检测人脸，使用 LBPH 完成本地训练和识别；
+- 我在录入时显示 `0/20` 的采集进度；
+- 我持久保存人脸样本、模型和 UTF-8 姓名标签，并在重启后自动加载；
+- 我在模型缺失但样本仍存在时自动重建模型，不要求重新录入；
+- 我用 SHA-256 清单绑定模型与标签，发现不一致时拒绝混用；
+- 我在画面上显示归一化识别准确度，默认最低值为 20%；
+- 我要求同一身份连续匹配 3 次后才允许开门；
+- 我在画面中同时出现多张人脸时拒绝放行；
+- 我把账号密码登录开门作为常态入口，与人脸识别并列提供；
+- 我在开门前先写入审计记录，数据库异常时保持关门；
+- 我让模拟门锁按配置时间自动复位；
+- 我随主程序启动 HTTP/WebSocket 服务，并自动打开浏览器欢迎页；
+- 我异步执行中文语音播报；
+- 我按保留期限清理审计记录，默认保留 90 天；
+- 我同时维护 CMake、qmake、Debug/Release 和自动化测试流程。
 
-## 安全行为
+## 我的安全策略
 
-系统采用 fail-closed（失败时保持关闭）策略：
+我采用 fail-closed（失败时保持关闭）策略：
 
 ```text
-人脸识别或账号密码验证
-          │
-          ▼
-      通行策略判断
-          │
-          ▼
-  写入 SQLite 审计意图
-       │        │
-     成功       失败
-       │        └── 拒绝开门
-       ▼
-   请求门锁开门
-       │
-       ▼
-回写结果并推送欢迎页
+我执行人脸识别或账号密码验证
+              │
+              ▼
+        我执行通行策略判断
+              │
+              ▼
+      我写入 SQLite 审计意图
+           │        │
+         成功       失败
+           │        └── 我拒绝开门
+           ▼
+       我请求门锁开门
+           │
+           ▼
+  我回写结果并推送浏览器欢迎页
 ```
 
-人脸放行需要同时满足：
+我只在人脸识别同时满足以下条件时放行：
 
-1. 检测画面中只有一张人脸；
-2. LBPH 距离不超过 `confidenceThreshold`；
-3. 归一化准确度不低于 `minimumAccuracy`；
-4. 模型标签存在且模型清单校验通过；
-5. 相同身份连续匹配达到 `requiredConsecutiveMatches`；
-6. 审计数据库写入成功。
+1. 我在检测画面中只找到一张人脸；
+2. 我得到的 LBPH 距离不超过 `confidenceThreshold`；
+3. 我计算的归一化准确度不低于 `minimumAccuracy`；
+4. 我能找到对应标签，并且模型清单校验通过；
+5. 我连续得到相同身份的次数达到 `requiredConsecutiveMatches`；
+6. 我成功写入审计数据库。
 
-这里显示的“准确度”是由 LBPH 距离归一化得到的工程评分，不是统计学概率。
+我把界面里的“准确度”定义为由 LBPH 距离归一化得到的工程评分，而不是统计学概率。
 
-## 数据隔离
+## 我如何隔离数据
 
-运行数据不写入源码仓库或构建目录。默认使用 Qt 的 `AppLocalDataLocation`；Windows 通常为：
+我不会把运行数据写进源码仓库或构建目录。我默认使用 Qt 的 `AppLocalDataLocation`；在 Windows 上，我通常把数据放在：
 
 ```text
 C:\Users\<用户名>\AppData\Local\SmartAccessWelcome\SmartAccessWelcome\
 ├─ database\
-│  ├─ access.db              # SQLite 审计数据库
-│  ├─ access.db-wal          # SQLite WAL 文件，运行时可能存在
+│  ├─ access.db               # 我保存的 SQLite 审计数据库
+│  ├─ access.db-wal           # 我运行 SQLite 时可能产生的 WAL 文件
 │  └─ access.db-shm
 ├─ biometrics\
-│  ├─ faces\<姓名>\*.jpg    # 录入的人脸样本
-│  ├─ model.yml              # LBPH 模型
-│  ├─ labels.csv             # UTF-8 人员标签
-│  └─ model.yml.manifest.json# 模型/标签 SHA-256 清单
+│  ├─ faces\<姓名>\*.jpg     # 我录入的人脸样本
+│  ├─ model.yml               # 我训练的 LBPH 模型
+│  ├─ labels.csv              # 我保存的 UTF-8 人员标签
+│  └─ model.yml.manifest.json # 我生成的模型/标签 SHA-256 清单
 └─ logs\
-   └─ application.jsonl      # 结构化日志
+   └─ application.jsonl       # 我输出的结构化日志
 ```
 
-隔离原则：
+我按以下方式隔离这些数据：
 
-- `database/` 只保存门禁审计数据；
-- `biometrics/` 只保存生物特征样本和识别模型；
-- `logs/` 单独保存应用日志；
-- `.gitignore` 排除数据库、WAL、模型、标签、人脸样本和本地配置；
-- 从旧版本升级时，会从 `faces/` 或 `database/enrollment/` 非破坏性复制到 `biometrics/`，旧文件不会自动删除；
-- 人脸样本和模型不会按时间自动删除；只有 `access_events` 中超过 `storage.retentionDays` 的审计记录会清理。
+- 我只在 `database/` 中保存门禁审计数据；
+- 我只在 `biometrics/` 中保存生物特征样本和识别模型；
+- 我单独使用 `logs/` 保存应用日志；
+- 我用 `.gitignore` 排除数据库、WAL、模型、标签、人脸样本和本地配置；
+- 我在升级时从旧的 `faces/` 或 `database/enrollment/` 非破坏性复制到 `biometrics/`，不会自动删除旧文件；
+- 我不会按时间删除人脸样本和模型，只会清理 `access_events` 中超过 `storage.retentionDays` 的审计记录。
 
-可通过 `SAW_DATA_DIR` 指定另一处独立数据根目录：
+我可以通过 `SAW_DATA_DIR` 指定另一处数据根目录：
 
 ```powershell
 $env:SAW_DATA_DIR = 'D:\SmartAccessData'
 ```
 
-不要把真实人脸样本、数据库、日志或账号密码提交到 Git。
+我不会把真实人脸样本、数据库、日志或实际账号密码提交到 Git。
 
-## 项目结构
+## 我的项目结构
 
 ```text
 apps/
-├─ terminal/                 主门禁程序
-└─ camera-demo/              摄像头与门禁仿真程序
+├─ terminal/                 我维护的主门禁程序
+└─ camera-demo/              我维护的摄像头与门禁仿真程序
 modules/
-├─ access-control/           连续匹配、拒绝和冷却策略
-├─ access-server/            HTTP、WebSocket 与欢迎页
-├─ camera/                   摄像头采集与画面适配
-├─ config/                   JSON 配置加载和边界校验
-├─ device/                   模拟门锁
-├─ logging/                  JSON Lines 日志
-├─ persistence/              SQLite 审计存储
-├─ speech/                   异步语音播报
-└─ vision/                   人脸检测、训练与识别
-config/                      配置示例和本地 OpenCV 配置
-docs/                        架构、API、部署和运维文档
-scripts/                     Windows 构建与测试脚本
-tests/                       自动化测试
-build/                       本地构建产物，不提交
+├─ access-control/           我实现的连续匹配、拒绝和冷却策略
+├─ access-server/            我实现的 HTTP、WebSocket 与欢迎页
+├─ camera/                   我封装的摄像头采集与画面适配
+├─ config/                   我实现的 JSON 配置加载和边界校验
+├─ device/                   我实现的模拟门锁
+├─ logging/                  我实现的 JSON Lines 日志
+├─ persistence/              我实现的 SQLite 审计存储
+├─ speech/                   我实现的异步语音播报
+└─ vision/                   我实现的人脸检测、训练与识别
+config/                      我提供的配置示例和本地 OpenCV 配置
+docs/                        我维护的架构、API、部署和运维文档
+scripts/                     我维护的 Windows 构建与测试脚本
+tests/                       我编写的自动化测试
+build/                       我在本地生成且不提交的构建产物
 ```
 
-主 qmake 工程为 `smart-access-welcome.pro`，仿真工程为 `camera-simulation-demo.pro`。
+我把主 qmake 工程命名为 `smart-access-welcome.pro`，把仿真工程命名为 `camera-simulation-demo.pro`。
 
-## 依赖
+## 我使用的依赖
 
-- C++17；
-- CMake 3.21+；
-- Qt 5.14.2+ 或 Qt 6；
-- Qt Core、Widgets、Network、WebSockets、Sql、TextToSpeech；
-- OpenCV，必须包含 `core`、`imgproc`、`imgcodecs`、`videoio`、`objdetect` 和 contrib `face`；
-- Windows 使用 Qt 5.14.2 MinGW 32 位时，OpenCV 架构必须一致。
+- 我使用 C++17；
+- 我要求 CMake 3.21+；
+- 我支持 Qt 5.14.2+ 或 Qt 6；
+- 我使用 Qt Core、Widgets、Network、WebSockets、Sql 和 TextToSpeech；
+- 我使用 OpenCV 的 `core`、`imgproc`、`imgcodecs`、`videoio`、`objdetect` 和 contrib `face`；
+- 我在 Windows 的 Qt 5.14.2 MinGW 32 位环境中使用相同架构的 OpenCV。
 
-生产环境推荐 64 位 Qt/OpenCV 4.x。仓库中的 Qt 5.14.2、MinGW 32 位和 OpenCV 3.4.5 配置属于兼容环境。
+我建议生产环境使用 64 位 Qt 和 OpenCV 4.x。我只把 Qt 5.14.2、MinGW 32 位和 OpenCV 3.4.5 作为兼容环境保留。
 
-## 配置
+## 我如何配置程序
 
-复制示例配置：
+我先复制示例配置：
 
 ```powershell
 Copy-Item config/config.example.json config/config.json
 ```
 
-关键字段：
+我主要调整以下字段：
 
 ```json
 {
@@ -165,28 +165,28 @@ Copy-Item config/config.example.json config/config.json
 }
 ```
 
-默认账号密码仅用于本地原型演示。实际部署必须修改密码，并应改为加盐密码哈希或外部身份系统，不能长期保存明文凭据。
+我只把默认账号密码用于本地原型演示。我在实际部署前会修改密码，并把明文比较替换为加盐密码哈希或外部身份系统。
 
-摄像头模式：
+我支持三种摄像头模式：
 
-| 模式 | 说明 |
+| 模式 | 我的处理方式 |
 |---|---|
-| `single_device` | 内置或 USB 单摄像头，完整画面用于预览和识别 |
-| `single_stereo_frame` | 单设备输出左右拼接画面，左半画面用于识别 |
-| `separate_devices` | 两个独立摄像头，主设备用于识别 |
+| `single_device` | 我使用内置或 USB 单摄像头，并用完整画面预览和识别 |
+| `single_stereo_frame` | 我接收单设备左右拼接画面，并用左半画面识别 |
+| `separate_devices` | 我同时打开两个摄像头，并用主设备识别 |
 
-环境变量：
+我使用以下环境变量：
 
-| 变量 | 用途 |
+| 变量 | 我的用途 |
 |---|---|
-| `SAW_DATA_DIR` | 指定隔离的运行数据根目录 |
-| `SAW_CONFIG_PATH` | 指定运行配置文件 |
-| `SAW_CASCADE_PATH` | 指定 Haar 人脸检测器 XML |
-| `OPENCV_ROOT` | qmake 构建时指定 OpenCV 安装目录 |
+| `SAW_DATA_DIR` | 我用它指定隔离的运行数据根目录 |
+| `SAW_CONFIG_PATH` | 我用它指定运行配置文件 |
+| `SAW_CASCADE_PATH` | 我用它指定 Haar 人脸检测器 XML |
+| `OPENCV_ROOT` | 我用它在 qmake 构建时指定 OpenCV 安装目录 |
 
-## 构建主程序
+## 我如何构建主程序
 
-### qmake（当前 Windows 兼容环境）
+### qmake（我的 Windows 兼容环境）
 
 ```powershell
 $env:OPENCV_ROOT = 'E:/path/to/opencv/install'
@@ -196,13 +196,13 @@ qmake ../../smart-access-welcome.pro "CONFIG+=release"
 mingw32-make -j4
 ```
 
-输出：
+我在这里得到主程序：
 
 ```text
 build/terminal-release/bin/SmartAccessWelcome.exe
 ```
 
-构建流程会把 OpenCV DLL 和 `haarcascade_frontalface_default.xml` 部署到程序目录。
+我在构建过程中自动部署 OpenCV DLL 和 `haarcascade_frontalface_default.xml`。
 
 ### CMake
 
@@ -212,39 +212,39 @@ cmake --build --preset windows-debug
 ctest --preset windows-debug --output-on-failure
 ```
 
-## 使用流程
+## 我的使用顺序
 
-1. 启动 `SmartAccessWelcome.exe`；
-2. 本地服务成功后，默认浏览器自动打开欢迎页；
-3. 选择摄像头模式和索引，点击“启动摄像头”；
-4. 首次使用点击“录入新人员”，输入姓名并完成 20 张样本采集；
-5. 点击“开始身份识别”，观察人脸框、姓名和准确度；
-6. 也可以随时点击“账号密码登录开门”；
-7. 放行、拒绝和门锁状态同步到浏览器欢迎页并写入审计数据库。
+1. 我启动 `SmartAccessWelcome.exe`；
+2. 我等待本地服务启动，浏览器会自动打开欢迎页；
+3. 我选择摄像头模式和索引，再点击“启动摄像头”；
+4. 我在首次使用时点击“录入新人员”，输入姓名并完成 20 张样本采集；
+5. 我点击“开始身份识别”，查看人脸框、姓名和准确度；
+6. 我也可以随时点击“账号密码登录开门”；
+7. 我在浏览器欢迎页查看放行、拒绝和门锁状态，并在审计数据库中保留记录。
 
-重新启动后，程序直接加载已保存的模型。若模型缺失但样本仍在，会自动重建模型。
+我重新启动程序后会直接加载已经保存的模型。模型缺失但样本仍在时，我会自动重建模型。
 
-## 摄像头性能
+## 我如何降低摄像头卡顿
 
-预览画面持续刷新，人脸识别默认每 3 帧计算一次，录入检测每 2 帧计算一次；中间帧复用最近的检测框。检测图像最大宽度缩放到 640 像素，摄像头缓冲设置为 1 帧，以降低 UI 卡顿和画面积压。
+我持续刷新预览画面，但只每 3 帧执行一次人脸识别，每 2 帧执行一次录入检测；我在中间帧复用最近的检测框。我把检测图像最大宽度缩放到 640 像素，并把摄像头缓冲设置为 1 帧，以降低 UI 卡顿和画面积压。
 
-## 浏览器欢迎页与 API
+## 我的浏览器欢迎页与 API
 
-服务默认监听 `127.0.0.1:8080`：
+我默认监听 `127.0.0.1:8080`：
 
-| 路径 | 用途 |
+| 路径 | 我提供的能力 |
 |---|---|
-| `/` | 浏览器欢迎页 |
-| `/health/live` | 存活检查 |
-| `/health/ready` | 摄像头、识别器、数据库和语音状态 |
-| `/api/v1/terminal/status` | 当前终端快照 |
-| `/ws` | WebSocket 实时事件 |
+| `/` | 我提供浏览器欢迎页 |
+| `/health/live` | 我提供进程存活检查 |
+| `/health/ready` | 我返回摄像头、识别器、数据库和语音状态 |
+| `/api/v1/terminal/status` | 我返回当前终端快照 |
+| `/ws` | 我通过 WebSocket 推送实时事件 |
 
-服务默认只面向本机。若监听局域网地址，必须另行增加 TLS、认证、访问控制和速率限制。
+我默认只面向本机提供服务。如果我要监听局域网地址，我会另行增加 TLS、认证、访问控制和速率限制。
 
-## 仿真程序
+## 我的仿真程序
 
-`CameraSimulationDemo` 不依赖人脸样本或识别模型，可使用合成画面或真实摄像头演示欢迎页和模拟门锁：
+我让 `CameraSimulationDemo` 独立于人脸样本和识别模型运行，并支持用合成画面或真实摄像头演示欢迎页和模拟门锁：
 
 ```powershell
 New-Item -ItemType Directory -Force build/camera-demo
@@ -253,41 +253,41 @@ qmake ../../camera-simulation-demo.pro "CONFIG+=release"
 mingw32-make -j4
 ```
 
-## 测试
+## 我的测试
 
-现有测试覆盖：
+我用自动化测试覆盖：
 
-- 连续身份匹配、拒绝和事件冷却；
-- HTTP 健康检查、状态接口和 WebSocket；
-- 配置边界、SQLite 持久化和模拟门锁自动复位。
+- 我验证连续身份匹配、拒绝和事件冷却；
+- 我验证 HTTP 健康检查、状态接口和 WebSocket；
+- 我验证配置边界、SQLite 持久化和模拟门锁自动复位。
 
 ```powershell
 ctest --preset windows-debug --output-on-failure
 ```
 
-## 当前限制
+## 我目前保留的限制
 
-1. 没有活体检测，无法可靠防御照片、屏幕翻拍或面具攻击；
-2. LBPH 适合小规模本地原型，对光照、姿态和遮挡较敏感；
-3. 摄像头读取和视觉计算仍位于 UI 线程，高分辨率或低性能设备可能卡顿；
-4. 账号密码当前来自本地明文配置，只适合受控演示环境；
-5. 人员以显示姓名组织样本，重名、改名和停用管理仍不完善；
-6. 当前只有模拟门锁，未实现真实继电器、串口或 GPIO 适配器；
-7. HTTP 服务没有内置 TLS 或管理认证；
-8. 识别“准确度”是工程评分，需要按现场样本校准，不是概率。
+1. 我还没有实现活体检测，因此无法可靠防御照片、屏幕翻拍或面具攻击；
+2. 我使用的 LBPH 更适合小规模本地原型，对光照、姿态和遮挡较敏感；
+3. 我仍在 UI 线程读取摄像头并执行视觉计算，高分辨率或低性能设备可能卡顿；
+4. 我目前从本地明文配置读取账号密码，只适合受控演示环境；
+5. 我按显示姓名组织人员样本，对重名、改名和停用的管理仍不完善；
+6. 我目前只提供模拟门锁，还没有实现继电器、串口或 GPIO 适配器；
+7. 我还没有为 HTTP 服务内置 TLS 或管理认证；
+8. 我显示的识别“准确度”是工程评分，需要按现场样本校准，不是概率。
 
-## 文档
+## 我维护的文档
 
-- [系统架构](docs/architecture.md)
-- [配置说明](docs/configuration.md)
-- [数据库设计](docs/database.md)
-- [API](docs/api.md)
-- [Windows 部署](docs/deployment-windows.md)
-- [运维手册](docs/operations.md)
-- [安全与隐私](docs/security-and-privacy.md)
-- [测试策略](docs/testing.md)
-- [仿真程序说明](docs/camera-simulation-demo.md)
+- [我对系统架构的说明](docs/architecture.md)
+- [我对配置项的说明](docs/configuration.md)
+- [我对数据库设计的说明](docs/database.md)
+- [我定义的 API](docs/api.md)
+- [我的 Windows 部署说明](docs/deployment-windows.md)
+- [我的运维手册](docs/operations.md)
+- [我的安全与隐私说明](docs/security-and-privacy.md)
+- [我的测试策略](docs/testing.md)
+- [我的仿真程序说明](docs/camera-simulation-demo.md)
 
-## 许可证
+## 我的许可证说明
 
-项目代码使用 [MIT License](LICENSE)。Qt、OpenCV、语音引擎、检测模型和设备驱动分别适用其自身许可证。
+我使用 [MIT License](LICENSE) 发布项目代码。我使用的 Qt、OpenCV、语音引擎、检测模型和设备驱动分别遵循各自的许可证。
