@@ -13,6 +13,7 @@
 | `camera.frameHeight` | 720 | 240–4320 |
 | `camera.captureIntervalMs` | 30 | 10–1000 ms |
 | `recognition.confidenceThreshold` | 80 | LBPH 距离上限，越小越严格 |
+| `recognition.minimumAccuracy` | 20 | 归一化匹配准确度下限；低于该值直接拒绝 |
 | `recognition.requiredConsecutiveMatches` | 3 | 1–100 |
 | `recognition.eventCooldownSeconds` | 10 | 0–3600 秒 |
 | `server.bindAddress` | `127.0.0.1` | 默认只允许本机访问 |

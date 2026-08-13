@@ -16,6 +16,7 @@ struct AppConfig {
     int frameHeight{720};
     int captureIntervalMs{30};
     double confidenceThreshold{80.0};
+    double minimumRecognitionAccuracy{20.0};
     int requiredConsecutiveMatches{3};
     int eventCooldownSeconds{10};
     QHostAddress bindAddress{QHostAddress::LocalHost};
@@ -25,6 +26,9 @@ struct AppConfig {
     int displayDurationSeconds{5};
     QString databaseFile;
     int retentionDays{90};
+    bool passwordAccessEnabled{true};
+    QString passwordAccessUsername{QStringLiteral("admin")};
+    QString passwordAccessPassword{QStringLiteral("123456")};
     bool speechEnabled{true};
     double speechRate{0.0};
     double speechVolume{1.0};

@@ -2,6 +2,10 @@ QT += core gui widgets network websockets
 
 CONFIG += c++17
 CONFIG -= app_bundle
+win32-g++ {
+    QMAKE_CFLAGS += -finput-charset=UTF-8 -fexec-charset=UTF-8
+    QMAKE_CXXFLAGS += -finput-charset=UTF-8 -fexec-charset=UTF-8
+}
 TEMPLATE = app
 TARGET = CameraSimulationDemo
 

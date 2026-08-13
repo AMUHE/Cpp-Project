@@ -7,10 +7,14 @@ namespace saw::camera {
 bool StereoCamera::openDevice(cv::VideoCapture &capture, int index)
 {
 #ifdef _WIN32
-    if (capture.open(index, cv::CAP_DSHOW))
+    if (capture.open(index, cv::CAP_DSHOW)) {
+        capture.set(cv::CAP_PROP_BUFFERSIZE, 1);
         return true;
+    }
 #endif
-    return capture.open(index);
+    if (!capture.open(index)) return false;
+    capture.set(cv::CAP_PROP_BUFFERSIZE, 1);
+    return true;
 }
 
 bool StereoCamera::open(const CameraOptions &options, std::string *error)

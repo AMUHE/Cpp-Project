@@ -27,7 +27,8 @@ namespace saw::config {
 bool ConfigLoader::load(const QString &path, const QString &dataDirectory,
                         AppConfig &config, QString *error)
 {
-    config.databaseFile = QDir(dataDirectory).filePath(QStringLiteral("access.db"));
+    const QString databaseDirectory = QDir(dataDirectory).filePath(QStringLiteral("database"));
+    config.databaseFile = QDir(databaseDirectory).filePath(QStringLiteral("access.db"));
     if (path.isEmpty() || !QFile::exists(path)) return true;
 
     QFile file(path);
@@ -61,6 +62,8 @@ bool ConfigLoader::load(const QString &path, const QString &dataDirectory,
 
     const QJsonObject recognition = root.value(QStringLiteral("recognition")).toObject();
     config.confidenceThreshold = bounded(recognition, "confidenceThreshold", 80.0, 1.0, 255.0);
+    config.minimumRecognitionAccuracy = bounded(
+        recognition, "minimumAccuracy", 20.0, 1.0, 100.0);
     config.requiredConsecutiveMatches = bounded(recognition, "requiredConsecutiveMatches", 3, 1, 100);
     config.eventCooldownSeconds = bounded(recognition, "eventCooldownSeconds", 10, 0, 3600);
 
@@ -82,7 +85,15 @@ bool ConfigLoader::load(const QString &path, const QString &dataDirectory,
     config.retentionDays = bounded(storage, "retentionDays", 90, 1, 3650);
     const QString database = storage.value(QStringLiteral("databaseFile")).toString().trimmed();
     if (!database.isEmpty())
-        config.databaseFile = QDir::isAbsolutePath(database) ? database : QDir(dataDirectory).filePath(database);
+        config.databaseFile = QDir::isAbsolutePath(database)
+            ? database : QDir(databaseDirectory).filePath(database);
+
+    QJsonObject passwordAccess = root.value(QStringLiteral("passwordAccess")).toObject();
+    if (passwordAccess.isEmpty())
+        passwordAccess = root.value(QStringLiteral("fallbackAccess")).toObject();
+    config.passwordAccessEnabled = passwordAccess.value(QStringLiteral("enabled")).toBool(true);
+    config.passwordAccessUsername = text(passwordAccess, "username", config.passwordAccessUsername);
+    config.passwordAccessPassword = text(passwordAccess, "password", config.passwordAccessPassword);
 
     const QJsonObject speech = root.value(QStringLiteral("speech")).toObject();
     config.speechEnabled = speech.value(QStringLiteral("enabled")).toBool(true);

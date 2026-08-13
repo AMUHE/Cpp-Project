@@ -25,10 +25,16 @@ qrc_*.cpp
 /data/
 /runtime/
 /logs/
+database/
+biometrics/
 *.db
+*.sqlite
+*.sqlite3
 *.db-shm
 *.db-wal
 model.yml
+model.yml.manifest.json
+labels.csv
 labels.txt
 faces/
 

@@ -45,7 +45,7 @@ cmake --build --preset windows-debug
 ctest --preset windows-debug
 ```
 
-遗留 Qt 5.14.2 MinGW 32 位环境使用 `SmartAccessWelcome.pro`，只用于迁移验证。新生产构建应切换到 64 位 Qt/OpenCV。
+遗留 Qt 5.14.2 MinGW 32 位环境使用 `smart-access-welcome.pro`，只用于迁移验证。新生产构建应切换到 64 位 Qt/OpenCV。
 
 Qt Creator 直接打开 `.pro` 时，先复制本地 OpenCV 配置：
 

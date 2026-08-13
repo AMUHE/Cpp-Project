@@ -15,6 +15,7 @@ struct FaceMatch {
     int label{-1};
     QString displayName;
     double distance{0.0};
+    double accuracy{0.0};
     bool accepted{false};
 };
 
@@ -26,7 +27,7 @@ public:
                const QString &labelsPath, QString *error = nullptr);
     std::vector<cv::Rect> detect(const cv::Mat &bgrFrame);
     FaceMatch recognize(const cv::Mat &bgrFrame, const cv::Rect &face,
-                        double threshold) const;
+                        double threshold, double minimumAccuracy) const;
     static cv::Mat normalizedFace(const cv::Mat &bgrFrame, const cv::Rect &face);
     bool ready() const { return !recognizer_.empty(); }
 

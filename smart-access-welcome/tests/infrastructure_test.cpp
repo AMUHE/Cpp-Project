@@ -33,7 +33,8 @@ private slots:
         QVERIFY(!config.speechEnabled);
         QCOMPARE(config.cameraMode, QStringLiteral("single_device"));
         QCOMPARE(config.frameHeight, 720);
-        QVERIFY(config.databaseFile.startsWith(directory.path()));
+        QCOMPARE(config.databaseFile,
+                 QDir(directory.path()).filePath(QStringLiteral("database/access.db")));
     }
 
     void eventsArePersisted()

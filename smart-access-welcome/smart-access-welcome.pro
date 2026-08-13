@@ -2,6 +2,10 @@ QT += core gui widgets network websockets sql texttospeech
 
 CONFIG += c++17
 CONFIG -= app_bundle
+win32-g++ {
+    QMAKE_CFLAGS += -finput-charset=UTF-8 -fexec-charset=UTF-8
+    QMAKE_CXXFLAGS += -finput-charset=UTF-8 -fexec-charset=UTF-8
+}
 TEMPLATE = app
 TARGET = SmartAccessWelcome
 
@@ -66,6 +70,7 @@ win32 {
     OPENCV_INCLUDE = $$OPENCV_ROOT/include
     OPENCV_LIB_DIR = $$OPENCV_ROOT/x86/mingw/lib
     OPENCV_BIN_DIR = $$OPENCV_ROOT/x86/mingw/bin
+    OPENCV_CASCADE_FILE = $$OPENCV_ROOT/etc/haarcascades/haarcascade_frontalface_default.xml
     TARGET_BIN_DIR = $$absolute_path(bin, $$OUT_PWD)
 
     !exists($$OPENCV_INCLUDE/opencv2/core.hpp) {
@@ -83,6 +88,13 @@ win32 {
 
     # Make Qt Creator runs find the OpenCV DLLs without changing system PATH.
     QMAKE_POST_LINK += $$quote(cmd /c xcopy /D /Y "$$shell_path($$OPENCV_BIN_DIR)\\*.dll" "$$shell_path($$TARGET_BIN_DIR)\\" ^>nul) $$escape_expand(\n\t)
+    exists($$OPENCV_CASCADE_FILE) {
+        detector_copy.files = $$OPENCV_CASCADE_FILE
+        detector_copy.path = $$TARGET_BIN_DIR
+        COPIES += detector_copy
+    } else {
+        warning("Face detector was not found: $$OPENCV_CASCADE_FILE")
+    }
 }
 
 DESTDIR = $$OUT_PWD/bin

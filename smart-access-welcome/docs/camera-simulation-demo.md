@@ -40,9 +40,9 @@ cmake --build --preset windows-debug --target saw_camera_demo
 先按开发指南配置 `config/opencv.local.pri`，然后使用独立构建目录：
 
 ```powershell
-New-Item -ItemType Directory -Force build-camera-demo
-Set-Location build-camera-demo
-qmake ../CameraSimulationDemo.pro
+New-Item -ItemType Directory -Force build/camera-demo
+Set-Location build/camera-demo
+qmake ../../camera-simulation-demo.pro
 mingw32-make -j4
 ./bin/CameraSimulationDemo.exe
 ```

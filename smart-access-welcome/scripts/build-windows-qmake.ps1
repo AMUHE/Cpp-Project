@@ -17,11 +17,11 @@ foreach ($path in @($qmake, $make, (Join-Path $OpenCvRoot 'include/opencv2/core.
 
 $env:Path = (Join-Path $MingwRoot 'bin') + ';' + (Join-Path $QtRoot 'bin') + ';' + $env:Path
 $env:OPENCV_ROOT = $OpenCvRoot.Replace('\', '/')
-$buildDirectory = Join-Path $projectRoot "build-qmake-$Configuration"
+$buildDirectory = Join-Path $projectRoot "build/terminal-$Configuration"
 New-Item -ItemType Directory -Force -Path $buildDirectory | Out-Null
 Push-Location $buildDirectory
 try {
-    & $qmake '../SmartAccessWelcome.pro' "CONFIG+=$Configuration"
+    & $qmake '../../smart-access-welcome.pro' "CONFIG+=$Configuration"
     if ($LASTEXITCODE -ne 0) { throw 'qmake configure failed' }
     & $make -j4
     if ($LASTEXITCODE -ne 0) { throw 'application build failed' }

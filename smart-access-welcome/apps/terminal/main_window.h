@@ -15,6 +15,7 @@
 class QComboBox;
 class QLabel;
 class QPushButton;
+class QProgressBar;
 class QSpinBox;
 namespace Ui { class MainWindow; }
 
@@ -29,6 +30,7 @@ private:
     void closeCamera();
     void startEnrollment();
     void toggleRecognition();
+    void openWithPassword();
     void processFrame();
     void setControlsForCamera(bool open);
     QString findCascade() const;
@@ -48,6 +50,8 @@ private:
     QPushButton *closeButton_{};
     QPushButton *enrollButton_{};
     QPushButton *recognizeButton_{};
+    QPushButton *passwordAccessButton_{};
+    QProgressBar *enrollmentProgress_{};
     QTimer timer_;
     QTimer stateResetTimer_;
     saw::camera::StereoCamera camera_;
@@ -59,6 +63,7 @@ private:
     saw::persistence::AccessEventStore eventStore_;
     saw::speech::SpeechAnnouncer speech_;
     QString dataDirectory_;
+    QString enrollmentDirectory_;
     bool databaseReady_{false};
     bool cascadeReady_{false};
     bool recognizing_{false};
@@ -66,5 +71,10 @@ private:
     QString enrollmentName_;
     int enrollmentCount_{0};
     int enrollmentFrameSkip_{0};
+    int visionFrameCounter_{0};
+    std::vector<cv::Rect> cachedFaces_;
+    std::vector<saw::vision::FaceMatch> cachedMatches_;
     static constexpr int EnrollmentTarget = 20;
+    static constexpr int RecognitionFrameInterval = 3;
+    static constexpr int EnrollmentFrameInterval = 2;
 };

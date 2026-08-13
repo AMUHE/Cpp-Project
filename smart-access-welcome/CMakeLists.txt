@@ -23,7 +23,7 @@ list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake")
 if(MSVC)
     add_compile_options(/W4 /permissive- /utf-8)
 else()
-    add_compile_options(-Wall -Wextra -Wpedantic)
+    add_compile_options(-Wall -Wextra -Wpedantic -finput-charset=UTF-8 -fexec-charset=UTF-8)
 endif()
 
 if(SAW_BUILD_APPS)

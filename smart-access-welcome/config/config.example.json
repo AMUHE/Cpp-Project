@@ -14,8 +14,14 @@
   },
   "recognition": {
     "confidenceThreshold": 80.0,
+    "minimumAccuracy": 20.0,
     "requiredConsecutiveMatches": 3,
     "eventCooldownSeconds": 10
+  },
+  "passwordAccess": {
+    "enabled": true,
+    "username": "admin",
+    "password": "123456"
   },
   "server": {
     "bindAddress": "127.0.0.1",
